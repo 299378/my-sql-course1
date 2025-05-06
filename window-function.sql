@@ -159,3 +159,22 @@ WHERE
     AND ps.Ward = 'Dermatology'
 ORDER BY
     ps.AdmittedDate;
+
+	/*
+Other special functions are LEAD() and LAG()
+LAG gets the value from the previous row in the window
+Use this for example to calculate the change of a balance or inventory level from  one day to the next
+*/
+SELECT
+    ps.AdmittedDate
+    , ps.Tariff
+    , LEAD(ps.Tariff) OVER (ORDER BY ps.AdmittedDate) AS NextDayTariff
+ , LAG(ps.Tariff) OVER (ORDER BY ps.AdmittedDate) AS PreviousDayTariff
+  , ps.Tariff - LAG(ps.Tariff) OVER (ORDER BY ps.AdmittedDate) AS ChangeOnPreviousDate
+FROM
+    PatientStay ps
+WHERE
+    ps.Hospital = 'Oxleas'
+    AND ps.Ward = 'Dermatology'
+ ORDER BY
+	ps.AdmittedDate;
